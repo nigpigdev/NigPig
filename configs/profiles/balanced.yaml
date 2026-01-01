@@ -1,0 +1,40 @@
+# Balanced Profile - Dengeli risk/hız
+# Risk: Orta | Hız: Orta | Gizlilik: Orta
+
+name: "balanced"
+description: "Dengeli tarama profili - varsayılan"
+
+budgets:
+  max_runtime_hours: 12
+  max_requests_per_hour: 1000
+  max_concurrency: 10
+  max_new_urls_per_cycle: 50000
+
+cycle:
+  interval_minutes: 60
+  delta_only_mode: true
+
+network:
+  timeout_seconds: 15
+  retries: 2
+  backoff: "exponential"
+  user_agent: "Mozilla/5.0 (compatible; NigPig/1.0)"
+  jitter_ms: 500
+
+checks:
+  passive_only: false
+  excluded_categories:
+    - "brute"
+    - "dos"
+  severity_max: "high"
+
+notify:
+  threshold: "high"
+  digest_mode: true
+  digest_interval_minutes: 30
+
+safety:
+  passive_only: false
+  no_auth: true
+  no_destructive: true
+  no_cloud: true

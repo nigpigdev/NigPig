@@ -1,0 +1,38 @@
+# Binaries
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Go workspace
+go.work
+go.sum
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NigPig specific
+*.log
+*.tmp
+NigPig_*.txt
+workspaces/
+.nigpig/
+
+# Credentials (never commit)
+credentials.enc
+*.key
+.env
+.env.local

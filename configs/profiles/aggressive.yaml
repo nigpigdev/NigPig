@@ -1,0 +1,40 @@
+# Aggressive Profile - Yüksek hız, kapsamlı tarama
+# Risk: Yüksek | Hız: Maximum | Gizlilik: Düşük
+# ⚠️ Sadece yetkili olduğunuz hedeflerde kullanın!
+
+name: "aggressive"
+description: "Yüksek hızlı, kapsamlı tarama profili"
+
+budgets:
+  max_runtime_hours: 6
+  max_requests_per_hour: 5000
+  max_concurrency: 50
+  max_new_urls_per_cycle: 100000
+
+cycle:
+  interval_minutes: 30
+  delta_only_mode: true
+
+network:
+  timeout_seconds: 10
+  retries: 3
+  backoff: "linear"
+  user_agent: "NigPig/1.0 Security Scanner"
+  jitter_ms: 100
+
+checks:
+  passive_only: false
+  excluded_categories:
+    - "dos"  # Hala DoS yapma
+  severity_max: "critical"
+
+notify:
+  threshold: "medium"
+  digest_mode: false  # Anlık bildirim
+  digest_interval_minutes: 0
+
+safety:
+  passive_only: false
+  no_auth: true  # Hala auth testleri kapalı
+  no_destructive: true  # Hala yıkıcı testler kapalı
+  no_cloud: false  # Cloud testleri açık

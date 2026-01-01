@@ -1,0 +1,96 @@
+# NigPig Default Configuration
+# ~/.nigpig/config.yaml veya proje dizininde config.yaml olarak kullanılabilir
+
+# Genel ayarlar
+general:
+  verbose: false
+  json_output: false
+  no_color: false
+  language: "tr"  # tr, en
+
+# Varsayılan profil
+default_profile: "balanced"
+
+# Workspace ayarları
+workspace:
+  base_path: ""  # Boş => ~/.nigpig/workspaces
+  auto_cleanup_days: 30
+
+# Tool paths (otomatik bulunur, özel path gerekirse)
+tools:
+  subfinder: ""
+  dnsx: ""
+  httpx: ""
+  katana: ""
+  nuclei: ""
+  ffuf: ""
+  amass: ""
+  gau: ""
+  gowitness: ""
+
+# Nuclei ayarları
+nuclei:
+  templates_path: ""  # Boş => varsayılan
+  custom_templates: ""
+  excluded_templates:
+    - "dos"
+    - "fuzzing"
+  severity_filter:
+    - "critical"
+    - "high"
+    - "medium"
+  rate_limit: 100
+  concurrency: 25
+
+# Bildirim ayarları
+notifications:
+  telegram:
+    enabled: false
+    bot_token: ""  # veya $NIGPIG_TELEGRAM_TOKEN
+    chat_id: ""    # veya $NIGPIG_TELEGRAM_CHAT_ID
+  
+  discord:
+    enabled: false
+    webhook_url: ""  # veya $NIGPIG_DISCORD_WEBHOOK
+  
+  slack:
+    enabled: false
+    webhook_url: ""  # veya $NIGPIG_SLACK_WEBHOOK
+  
+  email:
+    enabled: false
+    smtp_host: ""
+    smtp_port: 587
+    from: ""
+    to: ""
+    username: ""
+    password: ""  # Güvenli: env variable kullanın
+
+# Güvenlik ayarları
+security:
+  # Varsayılan olarak güvenli
+  destructive_tests: false
+  brute_force: false
+  auth_testing: false
+  cloud_testing: false
+  
+  # Redaction
+  redact_secrets: true
+  redact_patterns:
+    - "bearer"
+    - "token"
+    - "password"
+    - "api_key"
+    - "secret"
+
+# Cache ayarları
+cache:
+  ttl_days: 7
+  reuse_etags: true
+  max_size_mb: 500
+
+# Logging
+logging:
+  level: "info"  # debug, info, warn, error
+  file: ""  # Boş => sadece stdout
+  json_format: false

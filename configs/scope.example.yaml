@@ -1,0 +1,84 @@
+# Example Scope Configuration
+# Copy this file to your workspace and customize
+
+# Program information
+program: "example-program"
+target: "example.com"
+platform: "manual"  # hackerone, bugcrowd, intigriti, manual
+
+# In-scope targets
+in_scope:
+  domains:
+    - "example.com"
+    - "*.example.com"
+    - "api.example.com"
+    - "app.example.com"
+  
+  # Specific IPs (optional)
+  ips: []
+  
+  # Allowed ports
+  ports:
+    - 80
+    - 443
+    - 8080
+    - 8443
+  
+  # CIDR ranges (optional)
+  cidrs: []
+
+# Out-of-scope targets
+out_of_scope:
+  domains:
+    - "blog.example.com"
+    - "*.cdn.example.com"
+    - "status.example.com"
+  
+  # Paths to avoid
+  paths:
+    - "/logout"
+    - "/delete-*"
+    - "/admin/delete"
+    - "*/password-reset"
+  
+  # Keywords that indicate out-of-scope
+  keywords:
+    - "third-party"
+    - "cdn"
+    - "analytics"
+
+# Testing rules
+rules:
+  # Disable destructive tests
+  destructive_tests: false
+  
+  # Disable brute force attacks
+  brute_force: false
+  
+  # Disable auth testing (login, session, etc.)
+  auth_testing: false
+  
+  # Disable cloud service testing
+  cloud_testing: false
+  
+  # Rate limit (requests per second per host)
+  rate_limit: 10
+  
+  # Maximum concurrent connections per host
+  max_connections: 5
+  
+  # Respect robots.txt
+  respect_robots: true
+  
+  # Time window restrictions (optional)
+  # allowed_hours:
+  #   start: "09:00"
+  #   end: "17:00"
+  #   timezone: "Europe/Istanbul"
+
+# Notes
+notes: |
+  This is an example scope file.
+  - Only test systems you're authorized to test
+  - Follow responsible disclosure guidelines
+  - Report findings through proper channels

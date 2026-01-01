@@ -1,0 +1,46 @@
+# Stealth Profile - Düşük iz bırakma, yavaş tarama
+# Risk: Minimum | Hız: Düşük | Gizlilik: Maximum
+
+name: "stealth"
+description: "Düşük yoğunluklu, gizli tarama profili"
+
+budgets:
+  max_runtime_hours: 24
+  max_requests_per_hour: 100
+  max_concurrency: 2
+  max_new_urls_per_cycle: 10000
+
+cycle:
+  interval_minutes: 120
+  delta_only_mode: true
+
+network:
+  timeout_seconds: 30
+  retries: 2
+  backoff: "exponential"
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  # Adds random delay between requests
+  jitter_ms: 2000
+
+checks:
+  # Only passive checks
+  passive_only: true
+  # Skip noisy templates
+  excluded_categories:
+    - "brute"
+    - "dos"
+    - "fuzzing"
+    - "heavy"
+  # Only check safe templates
+  severity_max: "medium"
+
+notify:
+  threshold: "high"
+  digest_mode: true
+  digest_interval_minutes: 60
+
+safety:
+  passive_only: true
+  no_auth: true
+  no_destructive: true
+  no_cloud: true
