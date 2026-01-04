@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: nigpig-zap
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true
+    ports:
+      - "8080:8080"
+    volumes:
+      - zap-session:/zap/wrk
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/JSON/core/view/version/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - nigpig-network
+
+networks:
+  nigpig-network:
+    driver: bridge
+
+volumes:
+  zap-session:
+    driver: local

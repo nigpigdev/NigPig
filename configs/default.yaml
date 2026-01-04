@@ -1,0 +1,197 @@
+# NigPig Tools - Default Configuration
+# All values here represent SAFE defaults
+
+# ZAP API Configuration
+zap:
+  host: "localhost"
+  port: 8080
+  api_key: ""  # Disabled by default for local use
+
+# Rate Limiting (MANDATORY)
+rate_limits:
+  requests_per_second: 10
+  max_concurrency: 5
+  timebox_minutes: 30
+  max_urls: 500
+
+# Scope Enforcement
+scope:
+  same_origin_only: true
+  respect_robots_txt: true
+  allowed_methods:
+    - GET
+    - HEAD
+    - OPTIONS
+  # PUT, DELETE, PATCH are BLOCKED by default
+  blocked_methods:
+    - PUT
+    - DELETE
+    - PATCH
+    - POST  # POST only enabled in auth mode
+
+# Discovery Settings
+discovery:
+  parse_sitemap: true
+  parse_robots: true
+  spider_enabled: true
+  ajax_spider_enabled: true
+  max_depth: 5
+  max_children: 100
+
+# Recon Module Settings
+recon:
+  subdomain:
+    enabled: true
+    use_ct_logs: true
+    brute_force: true
+    rate_limit: 10
+    max_concurrent: 20
+  ports:
+    enabled: true
+    top_ports: 100
+    timeout: 2.0
+    max_concurrent: 50
+  dns:
+    enabled: true
+    nameservers: []
+
+# Fingerprinting
+fingerprint:
+  tech_detect: true
+  waf_detect: true
+  cms_detect: true
+
+# Content Fuzzing
+fuzzing:
+  enabled: true
+  wordlist: "wordlists/directories.txt"
+  rate_limit: 20
+  max_entries: 10000
+  extensions:
+    - ""
+    - ".php"
+    - ".html"
+    - ".js"
+    - ".json"
+
+# JavaScript Analysis
+js_analysis:
+  enabled: true
+  max_files: 20
+  extract_endpoints: true
+  extract_secrets: true
+
+# Secret Detection
+secrets:
+  enabled: true
+  max_file_size_mb: 5
+  skip_dirs:
+    - "node_modules"
+    - ".git"
+    - "vendor"
+
+# Visual/Screenshots
+visual:
+  enabled: false
+  width: 1920
+  height: 1080
+  full_page: false
+  max_concurrent: 5
+
+# SSL/TLS Analysis
+ssl:
+  enabled: true
+  check_protocols: true
+  check_ciphers: true
+
+# Scan Profiles
+profiles:
+  safe:
+    description: "Passive scan only, minimal crawl"
+    spider_max_depth: 2
+    spider_max_duration: 5
+    ajax_spider_enabled: false
+    active_scan_enabled: false
+    timebox_minutes: 15
+    requests_per_second: 5
+
+  balanced:
+    description: "Crawl + passive + controlled active"
+    spider_max_depth: 5
+    spider_max_duration: 10
+    ajax_spider_enabled: true
+    ajax_spider_max_duration: 5
+    active_scan_enabled: true
+    active_scan_policy: "Light"
+    timebox_minutes: 30
+    requests_per_second: 10
+
+  deep:
+    description: "Extended crawl with longer timebox"
+    spider_max_depth: 10
+    spider_max_duration: 20
+    ajax_spider_enabled: true
+    ajax_spider_max_duration: 15
+    active_scan_enabled: true
+    active_scan_policy: "Medium"
+    timebox_minutes: 60
+    requests_per_second: 15
+    max_urls: 1000
+
+# Passive Checks
+passive_checks:
+  security_headers:
+    - "Content-Security-Policy"
+    - "Strict-Transport-Security"
+    - "X-Frame-Options"
+    - "X-Content-Type-Options"
+    - "X-XSS-Protection"
+    - "Referrer-Policy"
+    - "Permissions-Policy"
+  cookie_flags:
+    - "HttpOnly"
+    - "Secure"
+    - "SameSite"
+  check_mixed_content: true
+  check_tls: true
+  detect_error_patterns: true
+
+# Evidence Collection & Masking
+evidence:
+  collect_request: true
+  collect_response_snippet: true
+  max_response_length: 1000
+  mask_patterns:
+    - 'Authorization:\s*Bearer\s+[^\s]+'
+    - 'Cookie:\s*[^\r\n]+'
+    - 'Set-Cookie:\s*[^\r\n]+'
+    - 'api[_-]?key[=:]\s*[^\s&"]+'
+    - 'token[=:]\s*[^\s&"]+'
+    - 'password[=:]\s*[^\s&"]+'
+    - 'secret[=:]\s*[^\s&"]+'
+
+# PII Masking in Reports
+pii_masking:
+  enabled: true
+  patterns:
+    email: '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    phone: '\b\d{3}[-.]?\d{3}[-.]?\d{4}\b'
+    ssn: '\b\d{3}-\d{2}-\d{4}\b'
+    credit_card: '\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b'
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_per_run: true
+  log_directory: "logs"
+
+# Reporting
+reporting:
+  output_directory: "reports"
+  formats:
+    - json
+    - markdown
+    - html
+  include_remediation: true
+  include_owasp_mapping: true

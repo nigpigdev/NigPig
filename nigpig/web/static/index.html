@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NigPig Tools - Security Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🐷</span>
+            <span class="logo-text">NigPig</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-page="dashboard">
+                <span class="nav-icon">📊</span> Dashboard
+            </li>
+            <li class="nav-item" data-page="scan">
+                <span class="nav-icon">🎯</span> Quick Scan
+            </li>
+            <li class="nav-item" data-page="recon">
+                <span class="nav-icon">🔍</span> Recon
+            </li>
+            <li class="nav-item" data-page="fingerprint">
+                <span class="nav-icon">🔬</span> Fingerprint
+            </li>
+            <li class="nav-item" data-page="templates">
+                <span class="nav-icon">🧪</span> Templates
+            </li>
+            <li class="nav-item" data-page="secrets">
+                <span class="nav-icon">🔐</span> Secrets
+            </li>
+            <li class="nav-item" data-page="audit">
+                <span class="nav-icon">🛡️</span> Audit
+            </li>
+            <li class="nav-item" data-page="results">
+                <span class="nav-icon">📋</span> Results
+            </li>
+        </ul>
+        <div class="status-bar">
+            <div class="status-item" id="status-docker">
+                <span class="status-dot"></span> Docker
+            </div>
+            <div class="status-item" id="status-zap">
+                <span class="status-dot"></span> ZAP
+            </div>
+        </div>
+    </nav>
+
+    <main class="content">
+        <!-- Dashboard Page -->
+        <div class="page active" id="page-dashboard">
+            <h1>Dashboard</h1>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="stat-scans">0</div>
+                    <div class="stat-label">Total Scans</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-value" id="stat-vulns">0</div>
+                    <div class="stat-label">Vulnerabilities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-value" id="stat-subs">0</div>
+                    <div class="stat-label">Subdomains</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💻</div>
+                    <div class="stat-value" id="stat-techs">0</div>
+                    <div class="stat-label">Technologies</div>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="showPage('scan')">🚀 New Scan</button>
+                    <button class="btn btn-secondary" onclick="showPage('results')">📋 View Results</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Scan Page -->
+        <div class="page" id="page-scan">
+            <h1>Quick Scan</h1>
+            <form id="scan-form" class="form-card">
+                <div class="form-group">
+                    <label for="scan-target">Target URL / Domain</label>
+                    <input type="text" id="scan-target" placeholder="https://example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Modules</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="tech" checked> Tech Detection
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="waf" checked> WAF Detection
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="templates" checked> Vuln Templates
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="ssl" checked> SSL Analysis
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="subdomain"> Subdomains
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="ports"> Port Scan
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="modules" value="fuzz"> Fuzzing
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">🚀 Start Scan</button>
+            </form>
+            
+            <div id="scan-progress" class="progress-card" style="display: none;">
+                <h3>Scan Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div id="progress-status">Initializing...</div>
+            </div>
+        </div>
+
+        <!-- Recon Page -->
+        <div class="page" id="page-recon">
+            <h1>Reconnaissance</h1>
+            <div class="tabs">
+                <button class="tab active" data-tab="subdomain">Subdomains</button>
+                <button class="tab" data-tab="ports">Port Scan</button>
+                <button class="tab" data-tab="dns">DNS Lookup</button>
+            </div>
+            
+            <div class="tab-content active" id="tab-subdomain">
+                <form id="subdomain-form" class="form-card">
+                    <div class="form-group">
+                        <label for="sub-domain">Domain</label>
+                        <input type="text" id="sub-domain" placeholder="example.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🔍 Enumerate</button>
+                </form>
+                <div id="subdomain-results" class="results-area"></div>
+            </div>
+            
+            <div class="tab-content" id="tab-ports">
+                <form id="ports-form" class="form-card">
+                    <div class="form-group">
+                        <label for="port-host">Host</label>
+                        <input type="text" id="port-host" placeholder="example.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🎯 Scan Ports</button>
+                </form>
+                <div id="ports-results" class="results-area"></div>
+            </div>
+            
+            <div class="tab-content" id="tab-dns">
+                <form id="dns-form" class="form-card">
+                    <div class="form-group">
+                        <label for="dns-domain">Domain</label>
+                        <input type="text" id="dns-domain" placeholder="example.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">📡 Lookup</button>
+                </form>
+                <div id="dns-results" class="results-area"></div>
+            </div>
+        </div>
+
+        <!-- Fingerprint Page -->
+        <div class="page" id="page-fingerprint">
+            <h1>Fingerprinting</h1>
+            <form id="fingerprint-form" class="form-card">
+                <div class="form-group">
+                    <label for="fp-url">Target URL</label>
+                    <input type="text" id="fp-url" placeholder="https://example.com" required>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="fp-tech" checked> Technology Detection
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="fp-waf" checked> WAF Detection
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">🔬 Analyze</button>
+            </form>
+            <div id="fingerprint-results" class="results-area"></div>
+        </div>
+
+        <!-- Templates Page -->
+        <div class="page" id="page-templates">
+            <h1>Vulnerability Templates</h1>
+            <form id="templates-form" class="form-card">
+                <div class="form-group">
+                    <label for="tpl-url">Target URL</label>
+                    <input type="text" id="tpl-url" placeholder="https://example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Severity Filter</label>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="severity" value="critical" checked> Critical
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="severity" value="high" checked> High
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="severity" value="medium" checked> Medium
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="severity" value="low"> Low
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">🧪 Run Templates</button>
+            </form>
+            <div id="templates-results" class="results-area"></div>
+        </div>
+
+        <!-- Secrets Page -->
+        <div class="page" id="page-secrets">
+            <h1>Secret Detection</h1>
+            <form id="secrets-form" class="form-card">
+                <div class="form-group">
+                    <label for="secret-content">Content to Scan</label>
+                    <textarea id="secret-content" rows="10" placeholder="Paste code, config, or text here..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">🔐 Scan for Secrets</button>
+            </form>
+            <div id="secrets-results" class="results-area"></div>
+        </div>
+
+        <!-- Audit Page -->
+        <div class="page" id="page-audit">
+            <h1>Security Audit</h1>
+            <div class="tabs">
+                <button class="tab active" data-tab="ssl">SSL/TLS</button>
+                <button class="tab" data-tab="deps">Dependencies</button>
+            </div>
+            
+            <div class="tab-content active" id="tab-ssl">
+                <form id="ssl-form" class="form-card">
+                    <div class="form-group">
+                        <label for="ssl-url">Target URL</label>
+                        <input type="text" id="ssl-url" placeholder="https://example.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🛡️ Analyze SSL</button>
+                </form>
+                <div id="ssl-results" class="results-area"></div>
+            </div>
+            
+            <div class="tab-content" id="tab-deps">
+                <form id="deps-form" class="form-card">
+                    <div class="form-group">
+                        <label for="deps-path">Project Path</label>
+                        <input type="text" id="deps-path" placeholder="C:\path\to\project" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">📦 Scan Dependencies</button>
+                </form>
+                <div id="deps-results" class="results-area"></div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div class="page" id="page-results">
+            <h1>Scan Results</h1>
+            <div id="results-list" class="results-list">
+                <p class="no-results">No scan results yet. Start a scan to see results here.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

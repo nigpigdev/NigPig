@@ -296,6 +296,75 @@ source ~/.bashrc
 - Current directory'ye yazma izni kontrol edin
 - Workspace'e fallback yapılır
 
+---
+
+## 🐍 NigPig Tools (Python + ZAP)
+
+NigPig artık OWASP ZAP entegrasyonu ile Python tabanlı güvenlik tarama modülü içeriyor.
+
+### Gereksinimler
+
+- Python 3.11+
+- Docker Desktop (ZAP için)
+
+### Kurulum
+
+```bash
+# 1. Python bağımlılıklarını kur
+cd nigpig
+pip install -e .
+
+# 2. ZAP konteynerini başlat
+docker-compose up -d zap
+
+# 3. Sistem kontrolü
+python -m nigpig doctor
+```
+
+### ZAP Konteyner Yönetimi
+
+```bash
+# ZAP'ı başlat
+docker-compose up -d zap
+
+# ZAP durumunu kontrol et
+docker ps --filter name=nigpig-zap
+
+# ZAP loglarını gör
+docker-compose logs zap
+
+# ZAP'ı durdur
+docker-compose down
+```
+
+### Profiller
+
+| Profil | Açıklama |
+|--------|----------|
+| **safe** | Sadece pasif tarama, minimal crawl |
+| **balanced** | Crawl + pasif + kontrollü aktif tarama |
+| **deep** | Genişletilmiş crawl, uzun timebox |
+
+### Rapor Çıktıları
+
+Her tarama sonrası `reports/<run_id>/` dizininde:
+- `report.json` - Makine okunabilir JSON
+- `report.md` - Markdown formatı
+- `report.html` - Tarayıcıda açılabilir interaktif rapor
+
+### Güvenli Varsayılanlar
+
+| Ayar | Değer |
+|------|-------|
+| İstek/saniye | 10 |
+| Maksimum eşzamanlılık | 5 |
+| Timebox | 30 dakika |
+| Maksimum URL | 500 |
+| PUT/DELETE | **KAPALI** |
+| robots.txt | Saygı duyulur |
+
+---
+
 ## 📜 Lisans
 
 MIT License
